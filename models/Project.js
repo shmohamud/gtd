@@ -1,15 +1,15 @@
 import mongoose, { Schema } from "mongoose";
-import stepScheme from "./Step";
 
-const ProjectScheme = new Schema(
-  {
+const ProjectScheme = new Schema({
+    _id: Schema.Types.ObjectId,
     title: String,
     description: String,
-    steps: [stepScheme]
+    steps: [{type: Schema.Types.ObjectId, ref: 'Step'}]
   },
   {
     timestamps: true
-  }
-);
+  })
 
-module.exports = mongoose.model("Project", ProjectScheme);
+  module.exports = mongoose.model('Project', ProjectScheme)
+
+

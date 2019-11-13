@@ -1,9 +1,6 @@
 import project from "../controllers/ProjectController";
 
 export default app => {
-  app.get("/", (req, res) => {
-    res.send("Test");
-  });
 
   app.route("/projects")
     .get(project.getAllProjects)

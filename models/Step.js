@@ -2,12 +2,13 @@ import mongoose, { Schema } from "mongoose";
 
 const StepScheme = new Schema(
   {
+    _id: Schema.Types.ObjectId,
     text: String,
-    description: String
+    completed: Boolean
   },
   {
     timestamps: true
   }
 );
 
-module.exports = mongoose.model("Step", StepScheme);
+module.exports = mongoose.model('Step', StepScheme);
