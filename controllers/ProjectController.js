@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import project from "../models/Project";
 
+
+exports.test = function (req, res) {
+  res.send('Greetings from the Test controller!')
+};
+
 exports.getProject = (req, res) => {
   project.findById(req.params.projectId, (err, project) => {
     if (err) {
@@ -53,6 +58,5 @@ exports.deleteProject = (req, res) => {
     }
     res.json({
       message: `${req.params.title} sucessfully deleted`
-    });
-  });
-};
+    })
+  })}

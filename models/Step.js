@@ -1,8 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+let mongoose = require ('mongoose');
+let Schema = mongoose.Schema
 
-const StepScheme = new Schema(
+const stepSchema = new Schema(
   {
-    _id: Schema.Types.ObjectId,
+    project: {type:Schema.Types.ObjectId, ref:'Project'} ,   
     text: String,
     completed: Boolean
   },
@@ -11,4 +12,4 @@ const StepScheme = new Schema(
   }
 );
 
-module.exports = mongoose.model('Step', StepScheme);
+module.exports = mongoose.model('Step', stepSchema);
