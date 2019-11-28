@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 import project from "../models/Project";
 
-
-exports.test = function (req, res) {
-  res.send('Greetings from the Test controller!')
-};
-
 exports.getProject = (req, res) => {
   project.findById(req.params.projectId, (err, project) => {
     if (err) {
@@ -20,7 +15,6 @@ exports.getAllProjects = (req, res) => {
     if (err) {
       res.send(err);
     }
-
     res.json(projects);
   });
 };

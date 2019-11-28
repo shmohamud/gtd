@@ -1,4 +1,5 @@
-import app from './app' 
+const app = require("./app");
 
-app.listen('4000')
+const port = process.env.PORT;
 
+app.listen(port);

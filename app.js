@@ -1,74 +1,32 @@
-let express = require('express') 
-let bodyParser = require('body-parser')
-let mongoose = require('mongoose')
-let Project = require('./models/Project')
-let Step = require('./models/Step')
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const routes = require("./routes");
+const Project = require("./models/Project");
+const Action = require("./models/Action");
 
 const app = express();
 
-const mongoDB = 'mongodb://localhost:27017/test';
-mongoose.connect(mongoDB, {useNewUrlParser: true,   useUnifiedTopology: true});
+console.log(process.env.MONGO_ATLAS_PW)
+
+const mongoDB = `mongodb+srv://smohamud:${process.env.MONGO_ATLAS_PW}@cluster0-kuuup.mongodb.net/gtd?retryWrites=true&w=majority`;
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const getProjects = async (q = {}) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      console.log("log 1 :", q, ": Query");
-      let projects = await Project.find(q).exec();
-      console.log("log 2 :", projects, ": Projects, below first await");
-      projects = await Promise.all(
-        projects.map(
-          proj =>
-            new Promise(async (resolve, reject) => {
-              try {
-                let steps = await Promise.all(
-                  proj.steps.map(
-                    step =>
-                      new Promise(async (resolve, reject) => {
-                        try {
-                          resolve(Step.findById(step).exec());
-                        } catch (e) {
-                          reject(e);
-                        }
-                      })
-                  )
-                );
-                resolve(Object.assign(proj, { steps }));
-                console.log("log 3 : ", steps, ": Steps");
-              } catch (e) {
-                reject(e);
-              }
-            })
-        )
-      );
-      resolve(projects);
-    } catch (e) {
-      reject(e);
-    }
-  });
+const action = async function() {
+  var data = await Action.findOne({ completed: false })
+    .populate("project")
+    .exec();
 };
-(async () => {
-  mongoose.connect(
-    mongoDB,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    },
-    e => {
-      console.log(e);
-      getProjects();
-    }
-  );
-})();
+
+action();
 
 
-app.get('/test', function(req,res){
-  res.send('Homepage Test')
-})
+app.use("/", routes);
 
 app.use((err, req, res, next) => {
   console.log(err.stack);
@@ -82,5 +40,4 @@ app.use((err, req, res, next) => {
   next();
 });
 
-
-module.exports = app
+module.exports = app;
